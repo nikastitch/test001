@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iN2X角色大赏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('https://i.ibb.co/HTGj7yc1/97d6c674b8351281539e134fddb33807.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            height: 400px;
+            background-image: url('https://i.ibb.co/W4MVQ5rK/cn-1200x675.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .main-title {
+            color: #fff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown-section {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+        }
+      
+        .countdown {
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 15px;
+            font-size: 1.5em;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+    .characters-grid {
+        display: grid;
+        grid-template-columns: 1fr; /* 默认单列布局 */
+        gap: 15px;
+        padding: 10px;
+        max-width: 100%;
+    }
+
+        .character-card {
+            background: rgba(255,255,255,0.8);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .character-image {
+            width: 50%;
+            height: 70%;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .character-name {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .character-desc {
+            color: #666;
+            line-height: 1.5;
+        }
+      
+        .vote-button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .vote-button:hover {
+            background: #45a049;
+        }
+
+        /* 新增投票计数器样式 */
+        .vote-counter {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+          @media (min-width: 768px) {
+        .characters-grid {
+            grid-template-columns: repeat(2, 1fr); /* 平板以上双列 */
+            max-width: 1200px;
+        }
+        .character-card {
+            width: 100%;
+            min-height: auto;
+        }
+        .character-image {
+            width: 60%;
+        }
+    }
+
+    /* 修改4: 调整标题字体大小 */
+    .character-name {
+        font-size: 1.8rem;
+        margin: 10px 0;
+    }
+
+    /* 修改5: 优化头部高度 */
+    .header {
+        height: 30vh; /* 改用视窗单位 */
+        min-height: 200px;
+    }
+    </style>
+</head>
+<body>
+    <header class="header">
+    </header>
+    <div class="countdown-section">
+        <div class="countdown" id="countdown"></div>
+    </div>
+    <div class="characters-grid">
+        <div class="character-card">
+            <img src="https://i.ibb.co/5gtWkRK6/teru5763-Chinese-style-Vtuber-Mafia-Chinese-clothes-Round-sungl-fa1a0cc5-7959-4ce4-9396-00c3d3a5f3d3.jpg" 
+                 alt="天满任" 
+                 class="character-image">
+            <h2 class="character-name">天满任</h2>
+            <p class="character-desc">「影月组」三代目若头，表面是茶道馆经营者，实际掌控地下情报网。擅长居合斩，随身折扇藏有暗器。看似玩世不恭的外表下坚守极道义理。</p>
+            <button class="vote-button" onclick="vote(1)">投票</button>
+            <span class="vote-counter" id="counter1">0</span>
+        </div>
+        
+        <div class="character-card">
+            <img src="https://i.ibb.co/F42tpzKd/teru5763-Black-police-uniform-trainer-whip-sadistic-handsome-6bd115da-bd62-472e-bf20-234e1a3216f1.jpg" 
+                 alt="漆原黑糖" 
+                 class="character-image">
+            <h2 class="character-name">漆原黑糖</h2>
+            <p class="character-desc">特别搜查课首席审讯官，持有「特别治安维持许可」的暴君警官。机械义肢搭载电击装置，审讯成功率100%但常因手段过激被投诉。</p>
+            <button class="vote-button" onclick="vote(2)">投票</button>
+            <span class="vote-counter" id="counter2">0</span>
+        </div>
+    </div>
+
+    <script>
+        // 初始化投票数据（带本地存储）
+        let votes = JSON.parse(localStorage.getItem('voteData')) || [0, 0];
+
+        // 页面加载时更新显示
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('counter1').textContent = votes[0];
+            document.getElementById('counter2').textContent = votes[1];
+        });
+
+        // 投票功能
+        function vote(characterId) {
+            votes[characterId-1]++;
+            document.getElementById(`counter${characterId}`).textContent = votes[characterId-1];
+            
+            try {
+                localStorage.setItem('voteData', JSON.stringify(votes));
+            } catch (e) {
+                console.error('本地存储失败:', e);
+            }
+        }
+
+        // 倒计时功能
+        function updateCountdown() {
+            const endDate = new Date('2025-05-01').getTime();
+            const now = new Date().getTime();
+            const distance = endDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = 
+                `${days}天 ${hours}小时 ${minutes}分钟 ${seconds}秒`;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
